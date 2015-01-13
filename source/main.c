@@ -20,7 +20,7 @@ const struct GameData {
 	int sensors;
 } data[] = {
 	{ "KYGE", "Yoshi's Topsy-Turvy", SENSOR_TILT },
-	{ "RZWE", "WarioWare Twisted!", SENSOR_GYRO | RUMBLE },
+	{ "RZWE", "WarioWare Twisted!", SENSOR_GYRO | SENSOR_RUMBLE },
 	{ 0, 0, 0 }
 };
 
@@ -83,6 +83,11 @@ void testTilt(void) {
 	printf("Tilt x: %03X, y: %03X\n", x, y);
 }
 
+void setVRumble(int rumble) {
+	u16 state = *GPIO_DATA & 0x7;
+	*GPIO_DATA = state | ((rumble & 1) << 3);
+}
+
 int main(void) {
 	consoleDemoInit();
 	videoSetMode(MODE_FB0);
@@ -103,6 +108,7 @@ int main(void) {
 		}
 	}
 	while (1) {
+		scanKeys();
 		swiWaitForVBlank();
 		if (!game) {
 			continue;
@@ -113,7 +119,9 @@ int main(void) {
 		if (game->sensors & SENSOR_GYRO) {
 			testGyro();
 		}
-
+		if (game->sensors & SENSOR_RUMBLE) {
+			setVRumble(keysHeld() & KEY_A);
+		}
 	}
 
 	return 0;
