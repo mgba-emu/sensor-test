@@ -5,6 +5,8 @@ vu8* const SENSOR_BASE = SRAM + 0x8000;
 vu16* const GPIO_DATA = (vu16*) 0x080000C4;
 vu16* const GPIO_DIR = (vu16*) 0x080000C6;
 vu16* const GPIO_CNT = (vu16*) 0x080000C8;
+int lightCount = 0;
+int lightData = 0;
 
 enum Sensor {
 	SENSOR_TILT = 1,
@@ -21,6 +23,7 @@ const struct GameData {
 } data[] = {
 	{ "KYGE", "Yoshi's Topsy-Turvy", SENSOR_TILT },
 	{ "RZWE", "WarioWare Twisted!", SENSOR_GYRO | SENSOR_RUMBLE },
+	{ "U3IE", "Boktai", SENSOR_LIGHT | SENSOR_RTC },
 	{ 0, 0, 0 }
 };
 
@@ -83,6 +86,29 @@ void testTilt(void) {
 	printf("Tilt x: %03X, y: %03X\n", x, y);
 }
 
+void clearLight(void) {
+	*GPIO_DATA = 2;
+	*GPIO_DATA = 0;
+	lightData = 0;
+	lightCount = 0;
+}
+
+void setupLight(void) {
+	setupGPIO(0x7);
+	clearLight();
+}
+
+void testLight(void) {
+	*GPIO_DATA = 1;
+	*GPIO_DATA = 0;
+	lightData += !((*GPIO_DATA & 8) >> 3);
+	++lightCount;
+	if (lightCount == 256) {
+		printf("Light level: %02X\n", lightData);
+		clearLight();
+	}
+}
+
 void setVRumble(int rumble) {
 	u16 state = *GPIO_DATA & 0x7;
 	*GPIO_DATA = state | ((rumble & 1) << 3);
@@ -106,6 +132,9 @@ int main(void) {
 		if (game->sensors & SENSOR_GYRO) {
 			setupGyro();
 		}
+		if (game->sensors & SENSOR_LIGHT) {
+			setupLight();
+		}
 	}
 	while (1) {
 		scanKeys();
@@ -118,6 +147,9 @@ int main(void) {
 		}
 		if (game->sensors & SENSOR_GYRO) {
 			testGyro();
+		}
+		if (game->sensors & SENSOR_LIGHT) {
+			testLight();
 		}
 		if (game->sensors & SENSOR_RUMBLE) {
 			setVRumble(keysHeld() & KEY_A);
