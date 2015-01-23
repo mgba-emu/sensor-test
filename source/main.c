@@ -21,9 +21,30 @@ const struct GameData {
 	const char* const name;
 	int sensors;
 } data[] = {
-	{ "KYGE", "Yoshi's Topsy-Turvy", SENSOR_TILT },
+	{ "KYGE", "Yoshi Topsy-Turvy", SENSOR_TILT },
+	{ "KYGP", "Yoshi's Universal Gravitation", SENSOR_TILT },
+	{ "KYGJ", "Yoshi's Universal Gravitation", SENSOR_TILT },
+
+	{ "KHPJ", "Happy Panechu!", SENSOR_TILT },
+
 	{ "RZWE", "WarioWare Twisted!", SENSOR_GYRO | SENSOR_RUMBLE },
+	{ "RZWP", "WarioWare Twisted!", SENSOR_GYRO | SENSOR_RUMBLE },
+	{ "RZWJ", "Mawaru Made in Wario", SENSOR_GYRO | SENSOR_RUMBLE },
+
+	{ "V49E", "Drill Dozer", SENSOR_RUMBLE },
+	{ "V49P", "Drill Dozer", SENSOR_RUMBLE },
+	{ "V49J", "Screw Breaker", SENSOR_RUMBLE },
+
 	{ "U3IE", "Boktai", SENSOR_LIGHT | SENSOR_RTC },
+	{ "U3IP", "Boktai", SENSOR_LIGHT | SENSOR_RTC },
+	{ "U3IJ", "Bokura no Taiyou", SENSOR_LIGHT | SENSOR_RTC },
+
+	{ "U32E", "Boktai 2", SENSOR_LIGHT | SENSOR_RTC },
+	{ "U32P", "Boktai 2", SENSOR_LIGHT | SENSOR_RTC },
+	{ "U32J", "Zoku Bokura no Taiyou", SENSOR_LIGHT | SENSOR_RTC },
+
+	{ "U33J", "Shin Bokura no Taiyou", SENSOR_LIGHT | SENSOR_RTC },
+
 	{ 0, 0, 0 }
 };
 
